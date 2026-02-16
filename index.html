@@ -6,112 +6,58 @@
 <title>TOKO RINJANI</title>
 
 <style>
-body{
-    font-family:Arial;
-    background:#f4f6f9;
-    padding:20px;
-}
-.container{
-    max-width:900px;
-    margin:auto;
-    background:white;
-    padding:20px;
-    border-radius:12px;
-}
+body{font-family:Arial;background:#f4f6f9;padding:20px}
+.container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:12px}
 h1{text-align:center;margin-bottom:10px}
 
 .search input{
-    width:100%;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid #ccc;
-    margin-bottom:20px;
-}
+width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;margin-bottom:20px}
 
 .product{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    background:#f9fafc;
-    padding:12px;
-    border-radius:10px;
-    margin-bottom:10px;
-}
+display:flex;justify-content:space-between;align-items:center;
+background:#f9fafc;padding:12px;border-radius:10px;margin-bottom:10px}
 
-.qty{
-    display:flex;
-    gap:8px;
-    align-items:center;
-}
-
-.qty input{
-    width:70px;
-    padding:5px;
-    border-radius:6px;
-    border:1px solid #ccc;
-    text-align:center;
-}
+.qty{display:flex;gap:8px;align-items:center}
+.qty input{width:70px;padding:5px;border-radius:6px;border:1px solid #ccc;text-align:center}
 
 button{
-    padding:5px 10px;
-    border:none;
-    border-radius:6px;
-    background:#e0e7ff;
-    cursor:pointer;
-}
+padding:6px 12px;border:none;border-radius:6px;
+background:#e0e7ff;cursor:pointer}
 
 .total{
-    text-align:right;
-    font-size:20px;
-    margin-top:20px;
-    font-weight:bold;
+margin-top:20px;
+font-size:20px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:10px;
 }
 
-/* ===== RESPONSIVE HP ===== */
-@media (max-width:600px){
-
-body{padding:10px;}
-
-.container{padding:15px;}
-
-h1{font-size:26px;}
-
-.product{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:10px;
-    padding:15px;
+.floatBtn{
+position:fixed;
+right:20px;
+bottom:20px;
+background:#6366f1;
+color:white;
+padding:12px 16px;
+border-radius:50px;
+font-size:18px;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
 }
 
-.name{
-    font-size:16px;
-}
-
-.qty{
-    width:100%;
-    justify-content:space-between;
-}
-
-.qty input{
-    width:90px;
-    font-size:16px;
-    padding:8px;
-}
-
-button{
-    padding:8px 14px;
-    font-size:16px;
-}
-
-.total{
-    font-size:22px;
-    text-align:center;
-}
+/* HP */
+@media(max-width:600px){
+.product{flex-direction:column;align-items:flex-start;gap:10px}
+.qty{width:100%;justify-content:space-between}
+.qty input{width:90px;font-size:16px;padding:8px}
+.total{font-size:22px;text-align:center}
 }
 </style>
 </head>
-<body>
 
+<body>
 <div class="container">
 <h1>TOKO RINJANI</h1>
 
@@ -121,13 +67,17 @@ button{
 
 <div id="list"></div>
 
-<div class="total">TOTAL Rp <span id="grand">0</span></div>
+<div class="total">
+<div>TOTAL Rp <span id="grand">0</span></div>
+<button onclick="clearQty()">Clear Qty</button>
 </div>
+
+</div>
+
+<button class="floatBtn" onclick="scrollToggle()" id="scrollBtn">⬇️</button>
 
 <script>
 const products=[
-
-// ===== PRINT & FOTO =====
 {name:"Print Warna HVS A4/F4",price:2000},
 {name:"Print Hitam putih HVS A4/F4",price:1000},
 {name:"Fotocopy A4/F4",price:250},
@@ -140,15 +90,11 @@ const products=[
 {name:"Cetak Foto 2x3",price:500},
 {name:"Cetak Foto 3x4",price:1000},
 {name:"Cetak Foto 4x6",price:1000},
-
-// ===== TISU & KERTAS =====
 {name:"Tisu Jolly 250 Sheets",price:10000},
 {name:"Tisu Yasmine 300 Sheets",price:5000},
 {name:"Kertas A4 1 Rim",price:45000},
 {name:"Kertas F4 1 Rim",price:50000},
 {name:"Kertas Folio Bergaris",price:1000},
-
-// ===== ATK =====
 {name:"Refill INK WB (isi tinta)",price:15000},
 {name:"Pulpen Standart 1 Pak",price:22000},
 {name:"Pulpen Standart /pcs",price:2000},
@@ -198,6 +144,7 @@ const products=[
 {name:"TITI Oil Pastels 18 (CRAYON)",price:28000},
 {name:"TITI TWIST CRAYON 12",price:26000},
 {name:"Joyko Color Pen 12",price:20000},
+{name:"Isi Stapler No 10",price:3000},
 {name:"Lem Tembak VOXY HMGG-10",price:13000},
 {name:"Isi Lem Tembak Kecil",price:1000},
 {name:"Isi Lem Tembak Besar",price:2000},
@@ -206,10 +153,8 @@ const products=[
 {name:"Tempar Pensil SQUEEZY PC-SQ32",price:27000},
 {name:"Lem AICA (AIBON)",price:15000},
 {name:"Joyko Notebook A5",price:20000},
-{name:"Pocket Diary ERICA 137",price:15000}
-
+{name:"Pocket Diary ERICA 137",price:15000},
 ];
-
 
 const list=document.getElementById("list");
 
@@ -264,6 +209,32 @@ let n=p.querySelector(".name").innerText.toLowerCase();
 p.style.display=n.includes(s)?"flex":"none";
 });
 }
+
+function clearQty(){
+products.forEach((p,i)=>{
+document.getElementById("q"+i).value=0;
+document.getElementById("t"+i).innerText="Rp 0";
+});
+updateTotal();
+}
+
+/* scroll button */
+function scrollToggle(){
+if(window.innerHeight + window.scrollY >= document.body.offsetHeight-50){
+window.scrollTo({top:0,behavior:'smooth'});
+}else{
+window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+}
+
+window.addEventListener("scroll",()=>{
+let btn=document.getElementById("scrollBtn");
+if(window.innerHeight + window.scrollY >= document.body.offsetHeight-50){
+btn.innerText="⬆️";
+}else{
+btn.innerText="⬇️";
+}
+});
 </script>
 
 </body>
