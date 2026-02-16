@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOKO RINJANI</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#f4f6f9;
+    padding:20px;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+}
+h1{text-align:center;margin-bottom:10px}
+
+.search input{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-bottom:20px;
+}
+
+.product{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#f9fafc;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.qty{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.qty input{
+    width:70px;
+    padding:5px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    text-align:center;
+}
+
+button{
+    padding:5px 10px;
+    border:none;
+    border-radius:6px;
+    background:#e0e7ff;
+    cursor:pointer;
+}
+
+.total{
+    text-align:right;
+    font-size:20px;
+    margin-top:20px;
+    font-weight:bold;
+}
+
+/* ===== RESPONSIVE HP ===== */
+@media (max-width:600px){
+
+body{padding:10px;}
+
+.container{padding:15px;}
+
+h1{font-size:26px;}
+
+.product{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    padding:15px;
+}
+
+.name{
+    font-size:16px;
+}
+
+.qty{
+    width:100%;
+    justify-content:space-between;
+}
+
+.qty input{
+    width:90px;
+    font-size:16px;
+    padding:8px;
+}
+
+button{
+    padding:8px 14px;
+    font-size:16px;
+}
+
+.total{
+    font-size:22px;
+    text-align:center;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>TOKO RINJANI</h1>
+
+<div class="search">
+<input id="search" placeholder="Cari produk..." onkeyup="searchProduct()">
+</div>
+
+<div id="list"></div>
+
+<div class="total">TOTAL Rp <span id="grand">0</span></div>
+</div>
+
+<script>
+const products=[
+
+// ===== PRINT & FOTO =====
+{name:"Print Warna HVS A4/F4",price:2000},
+{name:"Print Hitam putih HVS A4/F4",price:1000},
+{name:"Fotocopy A4/F4",price:250},
+{name:"Print Warna HVS A4/F4 (Bb)",price:4000},
+{name:"Print Hitam putih HVS A4/F4 (Bb)",price:2000},
+{name:"Fotocopy A4/F4 (Bb)",price:500},
+{name:"Laminating",price:3000},
+{name:"Cetak Foto A4",price:5000},
+{name:"Cetak Stiker A4",price:5000},
+{name:"Cetak Foto 2x3",price:500},
+{name:"Cetak Foto 3x4",price:1000},
+{name:"Cetak Foto 4x6",price:1000},
+
+// ===== TISU & KERTAS =====
+{name:"Tisu Jolly 250 Sheets",price:10000},
+{name:"Tisu Yasmine 300 Sheets",price:5000},
+{name:"Kertas A4 1 Rim",price:45000},
+{name:"Kertas F4 1 Rim",price:50000},
+{name:"Kertas Folio Bergaris",price:1000},
+
+// ===== ATK =====
+{name:"Refill INK WB (isi tinta)",price:15000},
+{name:"Pulpen Standart 1 Pak",price:22000},
+{name:"Pulpen Standart /pcs",price:2000},
+{name:"Pensil 2B /pcs",price:2000},
+{name:"Penggaris Besi",price:10000},
+{name:"Materai",price:12000},
+{name:"Buku Tabungan (1 Pak)",price:40000},
+{name:"Amplop Paperline No 104",price:20000},
+{name:"Amplop Paperline No 110",price:22000},
+{name:"Amplop Paperline No 90",price:25000},
+{name:"Palet Cat Air",price:3000},
+{name:"Buku Gambar A4 Sidu",price:5000},
+{name:"Tempat Pensil JOYKO",price:8000},
+{name:"Stapler KENKO",price:11000},
+{name:"Tinta Epson 003",price:95000},
+{name:"Stapler Kangaro HS10G",price:20000},
+{name:"Pembolong Kertas KENKO",price:16000},
+{name:"Stapler Kenko HD50",price:25000},
+{name:"Pensil 2B",price:15000},
+{name:"Pensil 2B Faber Castell",price:50000},
+{name:"Spidol Snowman",price:10000},
+{name:"Lem Fox",price:12000},
+{name:"Tipe-X Kenko",price:5000},
+{name:"Pulpen Kenko GEL",price:30000},
+{name:"Binder Klip 280",price:25000},
+{name:"Cutter L500",price:15000},
+{name:"Bussines File Snail Hecter",price:35000},
+{name:"Isi Stapler No 10",price:3000},
+{name:"Isi Stapler Etona No 24",price:5000},
+{name:"Binder Klip 105",price:5000},
+{name:"Binder Klip 155",price:12000},
+{name:"Binder Klip 107",price:7000},
+{name:"Binder Klip 200",price:15000},
+{name:"Binder Klip 111",price:8000},
+{name:"Lem Stik Fox",price:10000},
+{name:"Stabilo Joyko",price:7000},
+{name:"Lem Korea",price:5000},
+{name:"Lem Stik Joyko 8 gr",price:3000},
+{name:"Tinta Stampel Otomatis Manis",price:10000},
+{name:"Jenia Dispenser Lakban",price:18000},
+{name:"Lilin Ulang Tahun Angka",price:2000},
+{name:"Pensil Warna Joyko 12 CP-103",price:15000},
+{name:"Pensil Warna Joyko 12 CP-107",price:7000},
+{name:"Pensil Warna Faber Castell",price:30000},
+{name:"Acrylic Color Paint",price:20000},
+{name:"ABACUS (Sempoa)",price:12000},
+{name:"TITI Oil Pastels 18 (CRAYON)",price:28000},
+{name:"TITI TWIST CRAYON 12",price:26000},
+{name:"Joyko Color Pen 12",price:20000},
+{name:"Lem Tembak VOXY HMGG-10",price:13000},
+{name:"Isi Lem Tembak Kecil",price:1000},
+{name:"Isi Lem Tembak Besar",price:2000},
+{name:"Gillette",price:7000},
+{name:"Tempat Pensil Joyko PC-0719PL-38C",price:8000},
+{name:"Tempar Pensil SQUEEZY PC-SQ32",price:27000},
+{name:"Lem AICA (AIBON)",price:15000},
+{name:"Joyko Notebook A5",price:20000},
+{name:"Pocket Diary ERICA 137",price:15000}
+
+];
+
+
+const list=document.getElementById("list");
+
+products.forEach((p,i)=>{
+list.innerHTML+=`
+<div class="product">
+<div class="name">
+<b>${p.name}</b><br>
+Rp ${p.price.toLocaleString("id-ID")}
+</div>
+
+<div class="qty">
+<button onclick="step(${i},-1)">-</button>
+<input type="number" min="0" value="0" id="q${i}" onchange="change(${i})">
+<button onclick="step(${i},1)">+</button>
+<span id="t${i}">Rp 0</span>
+</div>
+</div>`;
+});
+
+function step(i,a){
+let input=document.getElementById("q"+i);
+let val=parseInt(input.value)||0;
+val+=a;
+if(val<0) val=0;
+input.value=val;
+change(i);
+}
+
+function change(i){
+let qty=parseInt(document.getElementById("q"+i).value)||0;
+let total=qty*products[i].price;
+document.getElementById("t"+i).innerText=
+"Rp "+total.toLocaleString("id-ID");
+updateTotal();
+}
+
+function updateTotal(){
+let total=0;
+products.forEach((p,i)=>{
+let qty=parseInt(document.getElementById("q"+i).value)||0;
+total+=qty*p.price;
+});
+document.getElementById("grand").innerText=
+total.toLocaleString("id-ID");
+}
+
+function searchProduct(){
+let s=document.getElementById("search").value.toLowerCase();
+document.querySelectorAll(".product").forEach(p=>{
+let n=p.querySelector(".name").innerText.toLowerCase();
+p.style.display=n.includes(s)?"flex":"none";
+});
+}
+</script>
+
+</body>
+</html>
